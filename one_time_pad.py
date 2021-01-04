@@ -1,14 +1,32 @@
 import secrets
 
 class OneTimePad:
-    def key_gen(self, number_of_bits):
+    def key_gen(self, number_of_bits: int) -> int:
         return secrets.randbits(number_of_bits)
 
-def str_to_int(s):
-    return int(''.join(format(ord(x), 'b') for x in s), 2)
+def str_to_int(s: str) -> int:
+    # return int.from_bytes('hello'.encode(), 'big')
+    return int(''.join(format(ord(x), '08b') for x in s), 2)
+    # return s.encode('utf-8')
 
-def nice_bin(integer, bit_length):
-    return format(integer, f'0{bit_length}b')
+def str_to_bits(s: str) -> str:
+    return ''.join(format(x, '08b') for x in s.encode('utf-8'))
+
+def bits_to_str(b: str) -> str:
+    if len(b) % 8 != 0: raise ValueError('input bits do not make 8-bit bytes.')
+    bytearray(int(b[8*i : 8*(i+1)], 2) for i in range(len(b) // 8)).decode('utf-8')
+
+def xor(bits1: str, bits2: str) -> str:
+    pass
+
+def int_to_str(n: int) -> str:
+    pass
+
+def bin_to_str(s: str) -> str:
+    return int_to_str(int(s, 2))
+
+def nice_bin(n: int, bit_length: int) -> str:
+    return format(n, f'0{bit_length}b')
 
 if __name__ == "__main__":
     pad = OneTimePad()
