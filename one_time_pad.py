@@ -5,7 +5,7 @@ import secrets
 # ==============================================================================
 
 # Begin with a message that you want to send
-message:str = "yao bad"
+message:str = "hello"
 
 # Convert the message into bytes
 msg:bytes = message.encode('utf8')
