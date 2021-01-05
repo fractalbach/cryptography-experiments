@@ -46,6 +46,7 @@ key         : {mybin(key)}
 ciphertext  : {mybin(cipher)}
 decrypted   : {mybin(output)}
 ------------+----------------
+ciphertext  : {cipher.decode('utf8', errors='replace')}
 message out : {output.decode('utf8')}
 ''')
 
