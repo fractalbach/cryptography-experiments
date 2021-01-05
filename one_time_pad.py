@@ -26,7 +26,7 @@ cipher:bytes = bytes(msg[i] ^ key[i] for i in range(length))
 # ------------------------------------------------------------------------------
 # You can retrieve the original messsage from the ciphertext with another XOR
 # between the ciphertext and the key.
-output:bytes = bytes(cipher[i] ^ key[i] for i in range(length))
+decrypted:bytes = bytes(cipher[i] ^ key[i] for i in range(length))
 
 
 # PRINT OUTPUT
@@ -44,9 +44,9 @@ message in  : {message}
 message     : {mybin(msg)}
 key         : {mybin(key)}
 ciphertext  : {mybin(cipher)}
-decrypted   : {mybin(output)}
+decrypted   : {mybin(decrypted)}
 ------------+----------------
 ciphertext  : {cipher.decode('utf8', errors='replace')}
-message out : {output.decode('utf8')}
+message out : {decrypted.decode('utf8')}
 ''')
 
