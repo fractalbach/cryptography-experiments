@@ -1,50 +1,51 @@
 import secrets
 
-class OneTimePad:
-    def key_gen(self, number_of_bits: int) -> int:
-        return secrets.randbits(number_of_bits)
 
-def str_to_int(s: str) -> int:
-    # return int.from_bytes('hello'.encode(), 'big')
-    return int(''.join(format(ord(x), '08b') for x in s), 2)
-    # return s.encode('utf-8')
+# ONE TIME PAD ENCRYPTION SCHEME
+# ==============================================================================
 
-def str_to_bits(s: str) -> str:
-    return ''.join(format(x, '08b') for x in s.encode('utf-8'))
+# Begin with a message that you want to send
+message:str = "yao bad"
 
-def bits_to_str(b: str) -> str:
-    if len(b) % 8 != 0: raise ValueError('input bits do not make 8-bit bytes.')
-    bytearray(int(b[8*i : 8*(i+1)], 2) for i in range(len(b) // 8)).decode('utf-8')
+# Convert the message into bytes
+msg:bytes = message.encode('utf8')
 
-def xor(bits1: str, bits2: str) -> str:
-    pass
+# KEY GENERATION
+# ------------------------------------------------------------------------------
+# One Time Pad encryption scheme uses a key that is exactly the same length as
+# the message being encrypted. We will only use this key one time.
+length:int = len(msg)
+key:bytes = secrets.token_bytes(length)
 
-def int_to_str(n: int) -> str:
-    pass
+# ENCRYPT
+# ------------------------------------------------------------------------------
+# XOR the key with the message to create ciphertext.
+cipher:bytes = bytes(msg[i] ^ key[i] for i in range(length))
 
-def bin_to_str(s: str) -> str:
-    return int_to_str(int(s, 2))
+# DECRYPT
+# ------------------------------------------------------------------------------
+# You can retrieve the original messsage from the ciphertext with another XOR
+# between the ciphertext and the key.
+output:bytes = bytes(cipher[i] ^ key[i] for i in range(length))
 
-def nice_bin(n: int, bit_length: int) -> str:
-    return format(n, f'0{bit_length}b')
 
-if __name__ == "__main__":
-    pad = OneTimePad()
-    msg = "hello"
+# PRINT OUTPUT
+# ==============================================================================
 
-    msg_int = str_to_int(msg)
-    bit_length = msg_int.bit_length()
+# Displays each byte in a fancy way with "lights" for each bit.
+def mybin(b:bytes) -> str:
+    off = '▢'; on = '▣'
+    return ''.join(f'{x:08b} ' for x in b).replace('0', off).replace('1', on)
 
-    key_int = pad.key_gen(bit_length)
-
-    cipher_int = msg_int ^ key_int
-
-    key_bits = nice_bin(key_int, bit_length)
-    msg_bits = nice_bin(msg_int, bit_length)
-    cipher_bits = nice_bin(cipher_int, bit_length)
-
-    print(f'message = "{msg}"')
-    print(f'message [{len(msg_bits)}]', msg_bits)
-    print(f'key     [{len(key_bits)}]', key_bits)
-    print(f'cipher  [{len(cipher_bits)}]', cipher_bits)
+# Print everything so we can see how we did.
+print(f'''
+message in  : {message}
+------------+----------------
+message     : {mybin(msg)}
+key         : {mybin(key)}
+ciphertext  : {mybin(cipher)}
+decrypted   : {mybin(output)}
+------------+----------------
+message out : {output.decode('utf8')}
+''')
 
